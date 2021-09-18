@@ -128,13 +128,15 @@ def lr_schedule(epoch):
     return lr
 
 
-def resnet_layer(inputs,
-                 num_filters=16,
-                 kernel_size=3,
-                 strides=1,
-                 activation='relu',
-                 batch_normalization=True,
-                 conv_first=True):
+def resnet_layer(
+    inputs,
+    num_filters=16,
+    kernel_size=3,
+    strides=1,
+    activation='relu',
+    batch_normalization=True,
+    conv_first=True
+):
     """2D Convolution-Batch Normalization-Activation stack builder
 
     Arguments:
