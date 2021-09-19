@@ -38,6 +38,18 @@ from tensorflow.keras.utils import to_categorical
 import numpy as np
 import math
 
+"""
+Training parameters
+
+"""
+
+# training parameters
+batch_size = 32 # original paper batch_size=128
+epochs = 200
+data_augmentation = True
+num_classes = 10
+subtract_pixel_mean = True # subtracting pixel mean improves accuracy
+
 # learning rate schedule
 def lr_schedule(epoch):
 
@@ -335,173 +347,169 @@ def resnet_v2(
     model = Model(inputs=inputs, outputs=outputs)
     return model
 
-# training parameters
-batch_size = 32 # original paper batch_size=128
-epochs = 200
-data_augmentation = True
-num_classes = 10
+# main
+if __name__ == "__main__":
 
-# subtracting pixel mean improves accuracy
-subtract_pixel_mean = True
+    # Model parameter
+    # ----------------------------------------------------------------------------
+    #           |      | 200-epoch | Orig Paper| 200-epoch | Orig Paper| sec/epoch
+    # Model     |  n   | ResNet v1 | ResNet v1 | ResNet v2 | ResNet v2 | GTX1080Ti
+    #           |v1(v2)| %Accuracy | %Accuracy | %Accuracy | %Accuracy | v1 (v2)
+    # ----------------------------------------------------------------------------
+    # ResNet20  | 3 (2)| 92.16     | 91.25     | -----     | -----     | 35 (---)
+    # ResNet32  | 5(NA)| 92.46     | 92.49     | NA        | NA        | 50 ( NA)
+    # ResNet44  | 7(NA)| 92.50     | 92.83     | NA        | NA        | 70 ( NA)
+    # ResNet56  | 9 (6)| 92.71     | 93.03     | 93.01     | NA        | 90 (100)
+    # ResNet110 |18(12)| 92.65     | 93.39+-.16| 93.15     | 93.63     | 165(180)
+    # ResNet164 |27(18)| -----     | 94.07     | -----     | 94.54     | ---(---)
+    # ResNet1001| (111)| -----     | 92.39     | -----     | 95.08+-.14| ---(---)
+    # ---------------------------------------------------------------------------
+    n = 3
 
-# Model parameter
-# ----------------------------------------------------------------------------
-#           |      | 200-epoch | Orig Paper| 200-epoch | Orig Paper| sec/epoch
-# Model     |  n   | ResNet v1 | ResNet v1 | ResNet v2 | ResNet v2 | GTX1080Ti
-#           |v1(v2)| %Accuracy | %Accuracy | %Accuracy | %Accuracy | v1 (v2)
-# ----------------------------------------------------------------------------
-# ResNet20  | 3 (2)| 92.16     | 91.25     | -----     | -----     | 35 (---)
-# ResNet32  | 5(NA)| 92.46     | 92.49     | NA        | NA        | 50 ( NA)
-# ResNet44  | 7(NA)| 92.50     | 92.83     | NA        | NA        | 70 ( NA)
-# ResNet56  | 9 (6)| 92.71     | 93.03     | 93.01     | NA        | 90 (100)
-# ResNet110 |18(12)| 92.65     | 93.39+-.16| 93.15     | 93.63     | 165(180)
-# ResNet164 |27(18)| -----     | 94.07     | -----     | 94.54     | ---(---)
-# ResNet1001| (111)| -----     | 92.39     | -----     | 95.08+-.14| ---(---)
-# ---------------------------------------------------------------------------
-n = 3
+    # model version
+    # orig paper: version = 1 (ResNet v1), 
+    # improved ResNet: version = 2 (ResNet v2)
+    version = 1
 
-# model version
-# orig paper: version = 1 (ResNet v1), 
-# improved ResNet: version = 2 (ResNet v2)
-version = 1
+    # computed depth from supplied model parameter n
+    if version == 1:
+        depth = n * 6 + 2
+    elif version == 2:
+        depth = n * 9 + 2
 
-# computed depth from supplied model parameter n
-if version == 1:
-    depth = n * 6 + 2
-elif version == 2:
-    depth = n * 9 + 2
+    # model name, depth and version
+    model_type = 'ResNet%dv%d' % (depth, version)
 
-# model name, depth and version
-model_type = 'ResNet%dv%d' % (depth, version)
+    # load the CIFAR10 data.
+    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-# load the CIFAR10 data.
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    # input image dimensions.
+    input_shape = x_train.shape[1:]
 
-# input image dimensions.
-input_shape = x_train.shape[1:]
+    # normalize data.
+    x_train = x_train.astype('float32') / 255
+    x_test = x_test.astype('float32') / 255
 
-# normalize data.
-x_train = x_train.astype('float32') / 255
-x_test = x_test.astype('float32') / 255
+    # if subtract pixel mean is enabled
+    if subtract_pixel_mean:
+        x_train_mean = np.mean(x_train, axis=0)
+        x_train -= x_train_mean
+        x_test -= x_train_mean
 
-# if subtract pixel mean is enabled
-if subtract_pixel_mean:
-    x_train_mean = np.mean(x_train, axis=0)
-    x_train -= x_train_mean
-    x_test -= x_train_mean
+    print('x_train shape:', x_train.shape)
+    print(x_train.shape[0], 'train samples')
+    print(x_test.shape[0], 'test samples')
+    print('y_train shape:', y_train.shape)
 
-print('x_train shape:', x_train.shape)
-print(x_train.shape[0], 'train samples')
-print(x_test.shape[0], 'test samples')
-print('y_train shape:', y_train.shape)
+    # convert class vectors to binary class matrices.
+    y_train = to_categorical(y_train, num_classes)
+    y_test = to_categorical(y_test, num_classes)
 
-# convert class vectors to binary class matrices.
-y_train = to_categorical(y_train, num_classes)
-y_test = to_categorical(y_test, num_classes)
+    if version == 2:
+        model = resnet_v2(input_shape=input_shape, depth=depth)
+    else:
+        model = resnet_v1(input_shape=input_shape, depth=depth)
 
-if version == 2:
-    model = resnet_v2(input_shape=input_shape, depth=depth)
-else:
-    model = resnet_v1(input_shape=input_shape, depth=depth)
+    model.compile(
+        loss='categorical_crossentropy',
+        optimizer=Adam(lr=lr_schedule(0)),
+        metrics=['acc']
+    )
+    model.summary()
 
-model.compile(
-    loss='categorical_crossentropy',
-    optimizer=Adam(lr=lr_schedule(0)),
-    metrics=['acc']
-)
-model.summary()
+    # enable this if pydot can be installed
+    # pip install pydot
+    plot_model(model, to_file="%s.png" % model_type, show_shapes=True)
+    print(model_type)
 
-# enable this if pydot can be installed
-# pip install pydot
-plot_model(model, to_file="%s.png" % model_type, show_shapes=True)
-print(model_type)
+    # prepare model model saving directory.
+    save_dir = os.path.join(os.getcwd(), 'saved_models')
+    model_name = 'cifar10_%s_model.{epoch:03d}.h5' % model_type
+    if not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
+    filepath = os.path.join(save_dir, model_name)
 
-# prepare model model saving directory.
-save_dir = os.path.join(os.getcwd(), 'saved_models')
-model_name = 'cifar10_%s_model.{epoch:03d}.h5' % model_type
-if not os.path.isdir(save_dir):
-    os.makedirs(save_dir)
-filepath = os.path.join(save_dir, model_name)
-
-# prepare callbacks for model saving and for learning rate adjustment.
-checkpoint = ModelCheckpoint(
-    filepath=filepath,
-    monitor='val_acc',
-    verbose=1,
-    save_best_only=True
-)
-
-lr_scheduler = LearningRateScheduler(lr_schedule)
-
-lr_reducer = ReduceLROnPlateau(
-    factor=np.sqrt(0.1),
-    cooldown=0,
-    patience=5,
-    min_lr=0.5e-6
-)
-
-callbacks = [checkpoint, lr_reducer, lr_scheduler]
-
-# run training, with or without data augmentation.
-if not data_augmentation:
-    print('Not using data augmentation.')
-    model.fit(x_train, y_train,
-              batch_size=batch_size,
-              epochs=epochs,
-              validation_data=(x_test, y_test),
-              shuffle=True,
-              callbacks=callbacks)
-else:
-    print('Using real-time data augmentation.')
-    # this will do preprocessing and realtime data augmentation:
-    datagen = ImageDataGenerator(
-        # set input mean to 0 over the dataset
-        featurewise_center=False,
-        # set each sample mean to 0
-        samplewise_center=False,
-        # divide inputs by std of dataset
-        featurewise_std_normalization=False,
-        # divide each input by its std
-        samplewise_std_normalization=False,
-        # apply ZCA whitening
-        zca_whitening=False,
-        # randomly rotate images in the range (deg 0 to 180)
-        rotation_range=0,
-        # randomly shift images horizontally
-        width_shift_range=0.1,
-        # randomly shift images vertically
-        height_shift_range=0.1,
-        # randomly flip images
-        horizontal_flip=True,
-        # randomly flip images
-        vertical_flip=False)
-
-    # compute quantities required for featurewise normalization
-    # (std, mean, and principal components if ZCA whitening is applied).
-    datagen.fit(x_train)
-
-    steps_per_epoch =  math.ceil(len(x_train) / batch_size)
-    # fit the model on the batches generated by datagen.flow().
-    model.fit(
-        x=datagen.flow(
-            x_train,
-            y_train,
-            batch_size=batch_size
-        ),
+    # prepare callbacks for model saving and for learning rate adjustment.
+    checkpoint = ModelCheckpoint(
+        filepath=filepath,
+        monitor='val_acc',
         verbose=1,
-        epochs=epochs,
-        validation_data=(x_test, y_test),
-        steps_per_epoch=steps_per_epoch,
-        callbacks=callbacks
+        save_best_only=True
     )
 
+    lr_scheduler = LearningRateScheduler(lr_schedule)
 
-# score trained model
-scores = model.evaluate(
-    x_test,
-    y_test,
-    batch_size=batch_size,
-    verbose=0
-)
-print('Test loss:', scores[0])
-print('Test accuracy:', scores[1])
+    lr_reducer = ReduceLROnPlateau(
+        factor=np.sqrt(0.1),
+        cooldown=0,
+        patience=5,
+        min_lr=0.5e-6
+    )
+
+    callbacks = [checkpoint, lr_reducer, lr_scheduler]
+
+    # run training, with or without data augmentation.
+    if not data_augmentation:
+        print('Not using data augmentation.')
+        model.fit(
+            x_train, y_train,
+            batch_size=batch_size,
+            epochs=epochs,
+            validation_data=(x_test, y_test),
+            shuffle=True,
+            callbacks=callbacks
+        )
+    else:
+        print('Using real-time data augmentation.')
+        # this will do preprocessing and realtime data augmentation:
+        datagen = ImageDataGenerator(
+            # set input mean to 0 over the dataset
+            featurewise_center=False,
+            # set each sample mean to 0
+            samplewise_center=False,
+            # divide inputs by std of dataset
+            featurewise_std_normalization=False,
+            # divide each input by its std
+            samplewise_std_normalization=False,
+            # apply ZCA whitening
+            zca_whitening=False,
+            # randomly rotate images in the range (deg 0 to 180)
+            rotation_range=0,
+            # randomly shift images horizontally
+            width_shift_range=0.1,
+            # randomly shift images vertically
+            height_shift_range=0.1,
+            # randomly flip images
+            horizontal_flip=True,
+            # randomly flip images
+            vertical_flip=False)
+
+        # compute quantities required for featurewise normalization
+        # (std, mean, and principal components if ZCA whitening is applied).
+        datagen.fit(x_train)
+
+        steps_per_epoch =  math.ceil(len(x_train) / batch_size)
+        # fit the model on the batches generated by datagen.flow().
+        model.fit(
+            x=datagen.flow(
+                x_train,
+                y_train,
+                batch_size=batch_size
+            ),
+            verbose=1,
+            epochs=epochs,
+            validation_data=(x_test, y_test),
+            steps_per_epoch=steps_per_epoch,
+            callbacks=callbacks
+        )
+
+
+    # score trained model
+    scores = model.evaluate(
+        x_test,
+        y_test,
+        batch_size=batch_size,
+        verbose=0
+    )
+    print('Test loss:', scores[0])
+    print('Test accuracy:', scores[1])
