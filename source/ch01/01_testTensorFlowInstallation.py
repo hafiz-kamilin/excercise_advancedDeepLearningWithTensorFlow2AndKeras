@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Perform 2 sanity check
+
+1. Check if TensorFlow is usable.
+2. Check if GPU can be utilized.
+
+"""
+
 while True:
     option = input("\nDo you want to disable the TensorFlow GPU debug info or not [Yes/No]: ")
     if option == "Yes" or option == "yes" or option == "y":

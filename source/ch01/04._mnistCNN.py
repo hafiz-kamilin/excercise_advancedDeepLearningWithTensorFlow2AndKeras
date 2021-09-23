@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Convoluted neural network (CNN) implementation
+on solving the MNIST dataset classification.
+
+"""
+
 # to supress tensorflow-gpu debug information
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Sample code snippet on loading MNIST dataset
+and splitting it to a train and test label.
+
+"""
+
 from tensorflow.keras.datasets import mnist
 import matplotlib.pyplot as plt
 import numpy as np

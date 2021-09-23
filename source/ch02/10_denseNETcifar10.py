@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Trains a 100-Layer DenseNet on the CIFAR10 dataset.
+100-Layer DenseNet model implementation on classifying the
+CIFAR10 dataset.
 
 With data augmentation:
 Greater than 93.55% test accuracy in 200 epochs
@@ -15,6 +16,10 @@ Densely Connected Convolutional Networks
 Network below is similar to 100-Layer DenseNet-BC (k=12)
 
 """
+
+######################
+# required libraries #
+######################
 
 from __future__ import absolute_import
 from __future__ import division
@@ -40,6 +45,10 @@ import os
 import numpy as np
 import math
 
+##############
+# parameters #
+##############
+
 # training parameters
 batch_size = 32
 epochs = 200
@@ -52,6 +61,7 @@ use_max_pool = False
 
 # DenseNet-BC with dataset augmentation
 # Growth rate   | Depth |  Accuracy (paper)| Accuracy (this)      |
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # 12            | 100   |  95.49%          | 93.74%               |
 # 24            | 250   |  96.38%          | requires big mem GPU |
 # 40            | 190   |  96.54%          | requires big mem GPU |
@@ -62,23 +72,9 @@ num_bottleneck_layers = (depth - 4) // (2 * num_dense_blocks)
 num_filters_bef_dense_block = 2 * growth_rate
 compression_factor = 0.5
 
-# load the CIFAR10 data
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
-
-# input image dimensions
-input_shape = x_train.shape[1:]
-
-# mormalize data
-x_train = x_train.astype('float32') / 255
-x_test = x_test.astype('float32') / 255
-print('x_train shape:', x_train.shape)
-print(x_train.shape[0], 'train samples')
-print(x_test.shape[0], 'test samples')
-print('y_train shape:', y_train.shape)
-
-# convert class vectors to binary class matrices.
-y_train = to_categorical(y_train, num_classes)
-y_test = to_categorical(y_test, num_classes)
+##########################
+# learning rate schedule #
+##########################
 
 def lr_schedule(epoch):
     """Learning Rate Schedule
@@ -103,6 +99,30 @@ def lr_schedule(epoch):
         lr *= 1e-1
     print('Learning rate: ', lr)
     return lr
+
+
+
+
+
+# load the CIFAR10 data
+(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+
+# input image dimensions
+input_shape = x_train.shape[1:]
+
+# mormalize data
+x_train = x_train.astype('float32') / 255
+x_test = x_test.astype('float32') / 255
+print('x_train shape:', x_train.shape)
+print(x_train.shape[0], 'train samples')
+print(x_test.shape[0], 'test samples')
+print('y_train shape:', y_train.shape)
+
+# convert class vectors to binary class matrices.
+y_train = to_categorical(y_train, num_classes)
+y_test = to_categorical(y_test, num_classes)
+
+
 
 
 # start model definition

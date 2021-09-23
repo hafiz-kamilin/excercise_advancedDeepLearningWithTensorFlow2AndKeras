@@ -2,17 +2,22 @@
 # -*- coding: utf-8 -*-
 
 """
-Trains a ResNet on the CIFAR10 dataset.
+ResNet V1/V2 model implementation on classifying the
+CIFAR10 dataset.
 
-ResNet v1
+ResNet v1 reference
 [a] Deep Residual Learning for Image Recognition
     https://arxiv.org/pdf/1512.03385.pdf
 
-ResNet v2
+ResNet v2 reference
 [b] Identity Mappings in Deep Residual Networks
     https://arxiv.org/pdf/1603.05027.pdf
 
 """
+
+######################
+# required libraries #
+######################
 
 from __future__ import absolute_import
 from __future__ import division
@@ -38,10 +43,9 @@ from tensorflow.keras.utils import to_categorical
 import numpy as np
 import math
 
-"""
-Training parameters
-
-"""
+##############
+# parameters #
+##############
 
 # training parameters
 batch_size = 32 # original paper batch_size=128
@@ -50,7 +54,37 @@ data_augmentation = True
 num_classes = 10
 subtract_pixel_mean = True # subtracting pixel mean improves accuracy
 
-# learning rate schedule
+# Model parameter
+# ----------------------------------------------------------------------------
+#           |      | 200-epoch | Orig Paper| 200-epoch | Orig Paper| sec/epoch
+# Model     |  n   | ResNet v1 | ResNet v1 | ResNet v2 | ResNet v2 | GTX1080Ti
+#           |v1(v2)| %Accuracy | %Accuracy | %Accuracy | %Accuracy | v1 (v2)
+# ----------------------------------------------------------------------------
+# ResNet20  | 3 (2)| 92.16     | 91.25     | -----     | -----     | 35 (---)
+# ResNet32  | 5(NA)| 92.46     | 92.49     | NA        | NA        | 50 ( NA)
+# ResNet44  | 7(NA)| 92.50     | 92.83     | NA        | NA        | 70 ( NA)
+# ResNet56  | 9 (6)| 92.71     | 93.03     | 93.01     | NA        | 90 (100)
+# ResNet110 |18(12)| 92.65     | 93.39+-.16| 93.15     | 93.63     | 165(180)
+# ResNet164 |27(18)| -----     | 94.07     | -----     | 94.54     | ---(---)
+# ResNet1001| (111)| -----     | 92.39     | -----     | 95.08+-.14| ---(---)
+# ---------------------------------------------------------------------------
+n = 3
+
+# model version
+# orig paper: version = 1 (ResNet v1), 
+# improved ResNet: version = 2 (ResNet v2)
+version = 1
+
+# computed depth from supplied model parameter n
+if version == 1:
+    depth = n * 6 + 2
+elif version == 2:
+    depth = n * 9 + 2
+
+##########################
+# learning rate schedule #
+##########################
+
 def lr_schedule(epoch):
 
     """
@@ -78,7 +112,10 @@ def lr_schedule(epoch):
     print('Learning rate: ', lr)
     return lr
 
-# 2d convolution-batch normalization-activation stack builder
+###############################################################
+# 2d convolution-batch normalization-activation stack builder #
+###############################################################
+
 def resnet_layer(
     inputs,
     num_filters=16,
@@ -130,7 +167,10 @@ def resnet_layer(
         x = conv(x)
     return x
 
-# resnet version 1 model builder
+##################################
+# resnet version 1 model builder #
+##################################
+
 def resnet_v1(
     input_shape,
     depth,
@@ -224,7 +264,10 @@ def resnet_v1(
     model = Model(inputs=inputs, outputs=outputs)
     return model
 
-# resnet version 2 model builder
+##################################
+# resnet version 2 model builder #
+##################################
+
 def resnet_v2(
     input_shape,
     depth,
@@ -347,35 +390,11 @@ def resnet_v2(
     model = Model(inputs=inputs, outputs=outputs)
     return model
 
-# main
+########
+# main #
+########
+
 if __name__ == "__main__":
-
-    # Model parameter
-    # ----------------------------------------------------------------------------
-    #           |      | 200-epoch | Orig Paper| 200-epoch | Orig Paper| sec/epoch
-    # Model     |  n   | ResNet v1 | ResNet v1 | ResNet v2 | ResNet v2 | GTX1080Ti
-    #           |v1(v2)| %Accuracy | %Accuracy | %Accuracy | %Accuracy | v1 (v2)
-    # ----------------------------------------------------------------------------
-    # ResNet20  | 3 (2)| 92.16     | 91.25     | -----     | -----     | 35 (---)
-    # ResNet32  | 5(NA)| 92.46     | 92.49     | NA        | NA        | 50 ( NA)
-    # ResNet44  | 7(NA)| 92.50     | 92.83     | NA        | NA        | 70 ( NA)
-    # ResNet56  | 9 (6)| 92.71     | 93.03     | 93.01     | NA        | 90 (100)
-    # ResNet110 |18(12)| 92.65     | 93.39+-.16| 93.15     | 93.63     | 165(180)
-    # ResNet164 |27(18)| -----     | 94.07     | -----     | 94.54     | ---(---)
-    # ResNet1001| (111)| -----     | 92.39     | -----     | 95.08+-.14| ---(---)
-    # ---------------------------------------------------------------------------
-    n = 3
-
-    # model version
-    # orig paper: version = 1 (ResNet v1), 
-    # improved ResNet: version = 2 (ResNet v2)
-    version = 1
-
-    # computed depth from supplied model parameter n
-    if version == 1:
-        depth = n * 6 + 2
-    elif version == 2:
-        depth = n * 9 + 2
 
     # model name, depth and version
     model_type = 'ResNet%dv%d' % (depth, version)

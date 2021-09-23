@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Multi-layer perceptron (feed-forward neural network) implementation
+on solving the MNIST dataset classification.
+
+"""
+
 # to supress tensorflow-gpu debug information
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

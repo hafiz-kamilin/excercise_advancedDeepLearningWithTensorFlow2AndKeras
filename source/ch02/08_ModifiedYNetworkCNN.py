@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Y-network CNN implementation with reduced number of layer
+to shorten the training time.
+
+"""
+
 # to supress tensorflow-gpu debug information
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

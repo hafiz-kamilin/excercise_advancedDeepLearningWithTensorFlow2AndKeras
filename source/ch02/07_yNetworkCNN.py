@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Y-network CNN implementation which has 2 input source with different
+filter applied on each input to increase the accuracy. This model is 
+implemented using functional API.
+
+"""
+
 # to supress tensorflow-gpu debug information
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
