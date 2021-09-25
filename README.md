@@ -21,20 +21,20 @@ IMO, this is a really good introductory book for a widely used machine learning 
 
 The original source code repository can be located [here](https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras). But I have modified some of the code structure to suit my own convenience (i.e. code styling, eliminating spaghetti code, comments, etc).
 
-## Directory
+## Chapter
 
-### [Chapter 1 - Introduction](source/ch01)
+### [1 - Introduction](source/ch01)
 1. [Test TensorFlow installation](source/ch01/01_testTensorFlowInstallation.py)
 2. [MNIST sampler](source/ch01/02_mnistSampler.py)
 3. [MLP on MNIST](source/ch01/03_mnistMLP.py)
 4. [CNN on MNIST](source/ch01/04._mnistCNN.py)
 5. [RNN on MNIST](source/ch01/05_mnistRNN.py)
 
-### [Chapter 2 - Deep Networks](source/ch02)
+### [2 - Deep Networks](source/ch02)
 6. [Functional API on MNIST](source/ch02/06_functionalCNN.py)
 7. [Y-Network on MNIST](source/ch02/07_yNetworkCNN.py)
 8. [Shallow Y-Network on MNIST](source/ch02/08_ModifiedYNetworkCNN.py)
 9. [ResNet v1 and v2 on CIFAR10](source/ch02/09_resNETcifar10.py)
 10. [DenseNet on CIFAR10](source/ch02/10_denseNETcifar10.py)
 
-### [Chapter 3 - AutoEncoders](source/ch03)
+### [3 - AutoEncoders](source/ch03)
