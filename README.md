@@ -8,7 +8,7 @@
 
 Compiled source code from the second edition of [Advanced Deep Learning with TensorFlow 2 and Keras](https://www.packtpub.com/product/advanced-deep-learning-with-tensorflow-2-and-keras-second-edition/9781838821654) book.
 
-IMO, this is a really good introductory book for a widely used machine learning models. But you might need a supplementary free resources available on YouTube, Medium, or research paper to understand more on the content.
+IMO, this is a really good introductory book that give simple and superficial explanation for a widely used machine learning models (kinda feels like [For Dummies series](https://www.dummies.com/), but skipping most of the steps). But you might need a supplementary free resources available on YouTube, Medium, or research paper to understand more on the content.
 
 ## Setup
 
