@@ -21,7 +21,7 @@ IMO, this is a really good introductory book for a widely used machine learning 
 
 The original source code repository can be located [here](https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras). But I have modified some of the code structure to suit my own convenience (i.e. code styling, eliminating spaghetti code, comments, etc).
 
-## Chapter
+## Chapters
 
 ### [1 - Introduction](source/ch01)
 1. [Test TensorFlow installation](source/ch01/01_testTensorFlowInstallation.py)
