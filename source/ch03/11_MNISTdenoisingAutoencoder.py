@@ -96,6 +96,8 @@ def autoEncoderBuilder(input_shape):
     encoder = Model(inputs, latent, name='encoder')
     encoder.summary()
     print("\n")
+    # plot encoder
+    plot_model(encoder, to_file="encoderModel.png", show_shapes=True)
 
     # build the decoder model
     latent_inputs = Input(shape=(latent_dim,), name='decoder_input')
@@ -127,6 +129,8 @@ def autoEncoderBuilder(input_shape):
     decoder = Model(latent_inputs, outputs, name='decoder')
     decoder.summary()
     print("\n")
+    # plot dencoder
+    plot_model(encoder, to_file="decoder.png", show_shapes=True)
 
     # autoencoder = encoder + decoder
     # instantiate autoencoder model
@@ -134,8 +138,7 @@ def autoEncoderBuilder(input_shape):
     autoencoder.summary()
     print("\n")
 
-    # enable this if pydot can be installed
-    # pip install pydot
+    # plot autoencoder
     plot_model(autoencoder, to_file="autoEncodeModel.png", show_shapes=True)
 
     return autoencoder
