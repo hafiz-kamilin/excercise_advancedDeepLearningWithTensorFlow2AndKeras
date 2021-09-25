@@ -38,3 +38,4 @@ The original source code repository can be located [here](https://github.com/Pac
 10. [DenseNet on CIFAR10](source/ch02/10_denseNETcifar10.py)
 
 ### [3 - AutoEncoders](source/ch03)
+11. [Denoising AutoEncoders](source/ch03/11_MNISTdenoisingAutoencoder.py)
