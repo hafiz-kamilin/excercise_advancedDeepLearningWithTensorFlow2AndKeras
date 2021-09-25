@@ -19,7 +19,7 @@ IMO, this is a really good introductory book for a widely used machine learning 
 
 ## Disclaimer
 
-The original source code repository can be located [here](https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras). But I have modified some of the code structure to suit my own convenience (i.e. code styling, eliminating spaghetti code, comments, etc).
+The original source code repository can be located [here](https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras). But I have modified some of the code structure to suit my own convenience (i.e. code styling, eliminating spaghetti code, comments, optimizing, etc).
 
 ## Chapters
 
