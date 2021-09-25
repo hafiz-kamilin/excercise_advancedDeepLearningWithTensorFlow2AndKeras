@@ -10,6 +10,15 @@ Compiled source code from the second edition of [Advanced Deep Learning with Ten
 
 IMO, this is a really good introductory book for a widely used machine learning models. But you might need a supplementary free resources available on YouTube, Medium, or research paper to understand more on the content.
 
+## Setup
+
+1. Install Anaconda or Miniconda and create a new environment.
+   `conda create --name <your new environment name>`
+2. Activate the new environment.
+   `conda activate <your new environment name>`
+3. Install the required packages.
+   `conda install tensorflow-gpu python-pydot graphviz pydot`
+4. cd to the [01_testTensorFlowInstallation.py](source/ch01/01_testTensorFlowInstallation.py) directory and run sanity program to test if the installation is properly configured or not.
 ## Disclaimer
 
 The original source code repository can be located [here](https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras). But I have modified some of the code structure to suit my own convenience (i.e. code styling, eliminating spaghetti code, comments, etc).
