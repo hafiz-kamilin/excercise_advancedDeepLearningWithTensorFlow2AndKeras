@@ -21,7 +21,7 @@ You will need a supplementary free resources available on YouTube, Medium, or fr
 
 ## Disclaimer
 
-The original source code repository can be located [here](https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras). But I have modified some of the code structure to suit my own convenience (i.e. code styling, eliminating spaghetti code, comments, optimizing, etc).
+The original source code repository can be located [here](https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras). But I have modified some of the code structure to suit my own convenience (i.e. code styling, eliminating spaghetti code, comments, optimizing for my low end hardware, etc).
 
 ## Chapters
 
@@ -39,5 +39,9 @@ The original source code repository can be located [here](https://github.com/Pac
 9. [ResNet v1 and v2 on CIFAR10](source/ch02/09_resNETcifar10.py)
 10. [DenseNet on CIFAR10](source/ch02/10_denseNETcifar10.py)
 
-### [3 - AutoEncoders](source/ch03)
-11. [Denoising AutoEncoders](source/ch03/11_MNISTdenoisingAutoencoder.py)
+### [3 - Autoencoders](source/ch03)
+11. [Autoencoder on MNIST](source/ch03/11_MNISTautoencoder.py)
+12. [AutoEncoders 2-dim latent vector data](source/ch03/12_MNISTautoencoderAE2dim.py)
+13. [Autoencoder and classification on MNIST](source/ch03/13_MNISTautoencoderClassification.py)
+14. [Autoencoders for denoising image](source/ch03/14_MNISTdenoisingAutoencoder.py)
+
