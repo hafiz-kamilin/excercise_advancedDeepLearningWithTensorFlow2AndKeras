@@ -57,6 +57,7 @@ kernel_size = 3
 latent_dim = 16
 
 # number of epochs
+# default value is 10
 epochs = 3
 
 # encoder/decoder number of CNN layers and filters per layer
