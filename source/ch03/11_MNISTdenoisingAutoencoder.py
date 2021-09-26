@@ -67,8 +67,11 @@ layer_filters = [32, 64]
 #######################
 
 def autoEncoderBuilder(input_shape):
-    
-    # build the autoencoder model
+
+    ##################
+    # encoder module #
+    ##################
+
     # first build the encoder model
     inputs = Input(shape=input_shape, name='encoder_input')
     x = inputs
@@ -98,6 +101,10 @@ def autoEncoderBuilder(input_shape):
     print("\n")
     # plot encoder
     plot_model(encoder, to_file="encoderModel.png", show_shapes=True)
+
+    ##################
+    # decoder module #
+    ##################
 
     # build the decoder model
     latent_inputs = Input(shape=(latent_dim,), name='decoder_input')
@@ -132,13 +139,17 @@ def autoEncoderBuilder(input_shape):
     # plot dencoder
     plot_model(encoder, to_file="decoder.png", show_shapes=True)
 
+    #####################################################
+    # combine the encode module with the decoder module #
+    ####################################################
+
     # autoencoder = encoder + decoder
     # instantiate autoencoder model
     autoencoder = Model(inputs, decoder(encoder(inputs)), name='autoencoder')
     autoencoder.summary()
     print("\n")
 
-    # plot autoencoder
+    # plot autoencoder graph
     plot_model(autoencoder, to_file="autoEncodeModel.png", show_shapes=True)
 
     return autoencoder
