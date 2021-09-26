@@ -41,7 +41,8 @@ The original source code repository can be located [here](https://github.com/Pac
 
 ### [3 - Autoencoders](source/ch03)
 11. [Autoencoder on MNIST](source/ch03/11_MNISTautoencoder.py)
-12. [AutoEncoders 2-dim latent vector data](source/ch03/12_MNISTautoencoderAE2dim.py)
+12. [Autoencoders 2-dim latent vector data](source/ch03/12_MNISTautoencoderAE2dim.py)
 13. [Autoencoder and classification on MNIST](source/ch03/13_MNISTautoencoderClassification.py)
 14. [Autoencoders for denoising image](source/ch03/14_MNISTdenoisingAutoencoder.py)
+15. [Autoencoder colorization on monochrome CIFAR10](source/ch03/15_CIFAR10autoencoderColorization.py)
 
