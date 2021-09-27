@@ -46,3 +46,5 @@ The original source code repository can be located [here](https://github.com/Pac
 14. [Autoencoders for denoising image](source/ch03/14_MNISTdenoisingAutoencoder.py)
 15. [Autoencoder colorization on monochrome CIFAR10](source/ch03/15_CIFAR10autoencoderColorization.py)
 
+### [4 - Generative Adversarial Network](source/ch04)
+16. [DCGAN on MNIST](source/ch04/16_MNISTdcgan.py)
