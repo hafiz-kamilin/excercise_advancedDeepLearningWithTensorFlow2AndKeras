@@ -84,7 +84,7 @@ def AEclassification(input_shape, filters):
     encoder = Model(inputs, latent, name='encoder')
     encoder.summary()
     print("\n")
-    plot_model(encoder, to_file='classifier-encoder.png', show_shapes=True)
+    plot_model(encoder, to_file='classifierEncoderModel.png', show_shapes=True)
 
     ##################
     # decoder module #
@@ -119,7 +119,7 @@ def AEclassification(input_shape, filters):
     decoder = Model(latent_inputs, outputs, name='decoder')
     decoder.summary()
     print("\n")
-    plot_model(decoder, to_file='classifier-decoder.png', show_shapes=True)
+    plot_model(decoder, to_file='classifierDecoderModel.png', show_shapes=True)
 
     #####################
     # classifier module #
@@ -149,7 +149,7 @@ def AEclassification(input_shape, filters):
     print("\n")
 
     # plot autoencoder graph
-    plot_model(autoencoder, to_file="autoEncode+classifier Model.png", show_shapes=True)
+    plot_model(autoencoder, to_file="classifierAutoencoderModel.png", show_shapes=True)
 
     return autoencoder, encoder, decoder
 

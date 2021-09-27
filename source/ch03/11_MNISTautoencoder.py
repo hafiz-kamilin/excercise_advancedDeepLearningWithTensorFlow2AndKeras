@@ -124,21 +124,20 @@ def autoEncoderBuilder(input_shape):
     decoder = Model(latent_inputs, outputs, name='decoder')
     decoder.summary()
     print("\n")
-    # plot dencoder
-    plot_model(encoder, to_file="decoder.png", show_shapes=True)
+    # plot decoder
+    plot_model(encoder, to_file="decoderModel.png", show_shapes=True)
 
     #####################################################
     # combine the encode module with the decoder module #
     ####################################################
 
-    # autoencoder = encoder + decoder
     # instantiate autoencoder model
     autoencoder = Model(inputs, decoder(encoder(inputs)), name='autoencoder')
     autoencoder.summary()
     print("\n")
 
     # plot autoencoder graph
-    plot_model(autoencoder, to_file="autoEncodeModel.png", show_shapes=True)
+    plot_model(autoencoder, to_file="autoencoderModel.png", show_shapes=True)
 
     return autoencoder
 
