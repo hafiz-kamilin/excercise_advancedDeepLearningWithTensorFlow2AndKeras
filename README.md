@@ -49,3 +49,5 @@ The original source code repository can be located [here](https://github.com/Pac
 ### [4 - Generative Adversarial Network](source/ch04)
 16. [DCGAN on MNIST](source/ch04/16_MNISTdcgan.py)
 17. [CGAN on MNIST](source/ch04/17_MNISTcgan.py)
+
+### [5 - Improved GAN](source/ch05)
