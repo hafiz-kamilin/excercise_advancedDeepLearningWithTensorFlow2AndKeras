@@ -115,6 +115,7 @@ def build_discriminator(inputs):
         discriminator (Model): Discriminator Model
 
     """
+    
     kernel_size = 5
     layer_filters = [32, 64, 128, 256]
 
