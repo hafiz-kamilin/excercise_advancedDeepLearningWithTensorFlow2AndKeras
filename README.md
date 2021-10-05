@@ -23,6 +23,8 @@ You will need a supplementary free resources available on YouTube, Medium, or fr
 
 The original source code repository can be located [here](https://github.com/PacktPublishing/Advanced-Deep-Learning-with-Keras). But I have modified some of the code structure to suit my own convenience (i.e. code styling, eliminating spaghetti code, comments, optimizing for my low end hardware, etc).
 
+After I have completed this book, this repo will be changed to a public archive (no more future update). 
+
 ## Chapters
 
 ### [1 - Introduction](source/ch01)
