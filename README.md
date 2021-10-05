@@ -51,3 +51,4 @@ The original source code repository can be located [here](https://github.com/Pac
 17. [CGAN on MNIST](source/ch04/17_MNISTcgan.py)
 
 ### [5 - Improved GAN](source/ch05)
+18. [WGAN on MNIST](source/ch05/18_MNISTwgan.py)
