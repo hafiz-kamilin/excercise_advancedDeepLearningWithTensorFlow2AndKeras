@@ -10,11 +10,12 @@ discriminate real from fake images that are conditioned on
 specific one-hot labels.
 
 [1] Radford, Alec, Luke Metz, and Soumith Chintala.
-"Unsupervised representation learning with deep convolutional
-generative adversarial networks." arXiv preprint arXiv:1511.06434 (2015).
+    "Unsupervised representation learning with deep convolutional generative adversarial networks."
+    arXiv preprint arXiv:1511.06434 (2015).
 
 [2] Mirza, Mehdi, and Simon Osindero. "Conditional generative
-adversarial nets." arXiv preprint arXiv:1411.1784 (2014).
+    adversarial nets."
+    arXiv preprint arXiv:1411.1784 (2014).
 
 """
 
