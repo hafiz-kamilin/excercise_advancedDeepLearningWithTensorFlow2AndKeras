@@ -1,4 +1,8 @@
-'''Trains WGAN on MNIST using Keras
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Trains WGAN on MNIST using Keras
 
 Trains a GAN using Wassertein loss. Similar to DCGAN except for
 linear activation in output and use of n_critic training per
@@ -6,16 +10,25 @@ adversarial training. Discriminator weights are clipped as a
 requirement of Lipschitz constraint.
 
 [1] Radford, Alec, Luke Metz, and Soumith Chintala.
-"Unsupervised representation learning with deep convolutional
-generative adversarial networks." arXiv preprint arXiv:1511.06434 (2015).
+    "Unsupervised representation learning with deep convolutional
+    generative adversarial networks." arXiv preprint arXiv:1511.06434 (2015).
 
 [2] Arjovsky, Martin, Soumith Chintala, and Léon Bottou.
-"Wasserstein GAN." arXiv preprint arXiv:1701.07875 (2017).
-'''
+    "Wasserstein GAN." arXiv preprint arXiv:1701.07875 (2017).
+
+"""
+
+######################
+# required libraries #
+######################
 
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
+# to supress tensorflow-gpu debug information
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 from tensorflow.keras.layers import Input
 from tensorflow.keras.optimizers import RMSprop
@@ -27,46 +40,56 @@ from tensorflow.keras.models import load_model
 import numpy as np
 import argparse
 
-import sys
-sys.path.append("..")
-from lib import gan
+# custom module to create the gan model component
+from utils import ganBuilder
 
+####################################################
+# Train the Discriminator and Adversarial Networks #
+####################################################
+ 
 def train(models, x_train, params):
-    """Train the Discriminator and Adversarial Networks
 
-    Alternately train Discriminator and Adversarial
-    networks by batch.
-    Discriminator is trained first with properly labelled
-    real and fake images for n_critic times.
-    Discriminator weights are clipped as a requirement 
-    of Lipschitz constraint.
-    Generator is trained next (via Adversarial) with 
-    fake images pretending to be real.
+    """
+    Alternately train Discriminator and Adversarial networks by batch.
+    Discriminator is trained first with properly labelled real and fake 
+    images for n_critic times. Discriminator weights are clipped as
+    a requirement of Lipschitz constraint. Generator is trained next 
+    (via Adversarial) with fake images pretending to be real.
+    
     Generate sample images per save_interval
 
     Arguments:
-        models (list): Generator, Discriminator,
-            Adversarial models
+        models (list): Generator, Discriminator, Adversarial models
         x_train (tensor): Train images
         params (list) : Networks parameters
 
     """
+
     # the GAN models
     generator, discriminator, adversarial = models
     # network parameters
-    (batch_size, latent_size, n_critic, 
-            clip_value, train_steps, model_name) = params
+    (
+        batch_size,
+        latent_size,
+        n_critic, 
+        clip_value,
+        train_steps,
+        model_name
+    ) = params
     # the generator image is saved every 500 steps
     save_interval = 500
     # noise vector to see how the 
     # generator output evolves during training
-    noise_input = np.random.uniform(-1.0,
-                                    1.0, 
-                                    size=[16, latent_size])
+    noise_input = np.random.uniform(
+        -1.0,
+        1.0, 
+        size=[16, latent_size]
+    )
     # number of elements in train dataset
     train_size = x_train.shape[0]
     # labels for real data
     real_labels = np.ones((batch_size, 1))
+
     for i in range(train_steps):
         # train discriminator n_critic times
         loss = 0
@@ -76,15 +99,19 @@ def train(models, x_train, params):
             # 1 batch of real (label=1.0) and 
             # fake images (label=-1.0)
             # randomly pick real images from dataset
-            rand_indexes = np.random.randint(0,
-                                             train_size, 
-                                             size=batch_size)
+            rand_indexes = np.random.randint(
+                0,
+                train_size, 
+                size=batch_size
+            )
             real_images = x_train[rand_indexes]
             # generate fake images from noise using generator
             # generate noise using uniform distribution
-            noise = np.random.uniform(-1.0,
-                                      1.0,
-                                      size=[batch_size, latent_size])
+            noise = np.random.uniform(
+                -1.0,
+                1.0,
+                size=[batch_size, latent_size]
+            )
             fake_images = generator.predict(noise)
 
             # train the discriminator network
@@ -96,12 +123,14 @@ def train(models, x_train, params):
             # from vanishing due to opposite
             # signs of real and fake data labels (i.e. +1 and -1) and 
             # small magnitude of weights due to clipping.
-            real_loss, real_acc = \
-                discriminator.train_on_batch(real_images,
-                                             real_labels)
-            fake_loss, fake_acc = \
-                discriminator.train_on_batch(fake_images,
-                                             -real_labels)
+            real_loss, real_acc = discriminator.train_on_batch(
+                real_images,
+                real_labels
+            )
+            fake_loss, fake_acc = discriminator.train_on_batch(
+                fake_images,
+                -real_labels
+            )
             # accumulate average loss and accuracy
             loss += 0.5 * (real_loss + fake_loss)
             acc += 0.5 * (real_acc + fake_acc)
@@ -109,9 +138,13 @@ def train(models, x_train, params):
             # clip discriminator weights to satisfy Lipschitz constraint
             for layer in discriminator.layers:
                 weights = layer.get_weights()
-                weights = [np.clip(weight,
-                                   -clip_value,
-                                   clip_value) for weight in weights]
+                weights = [
+                    np.clip(
+                        weight,
+                        -clip_value,
+                        clip_value
+                    ) for weight in weights
+                ]
                 layer.set_weights(weights)
 
         # average loss and accuracy per n_critic training iterations
@@ -124,9 +157,11 @@ def train(models, x_train, params):
         # since the discriminator weights are frozen in 
         # adversarial network only the generator is trained
         # generate noise using uniform distribution
-        noise = np.random.uniform(-1.0,
-                                  1.0,
-                                  size=[batch_size, latent_size])
+        noise = np.random.uniform(
+            -1.0,
+            1.0,
+            size=[batch_size, latent_size]
+        )
         # train the adversarial network
         # note that unlike in discriminator training,
         # we do not save the fake images in a variable
@@ -139,26 +174,36 @@ def train(models, x_train, params):
         print(log)
         if (i + 1) % save_interval == 0:
             # plot generator images on a periodic basis
-            gan.plot_images(generator,
-                            noise_input=noise_input,
-                            show=False,
-                            step=(i + 1),
-                            model_name=model_name)
+            ganBuilder.plot_images(
+                generator,
+                noise_input=noise_input,
+                show=False,
+                step=(i + 1),
+                model_name=model_name
+            )
 
     # save the model after training the generator
     # the trained generator can be reloaded 
     # for future MNIST digit generation
     generator.save(model_name + ".h5")
 
+##########################
+# wasserstein loss value #
+##########################
 
 def wasserstein_loss(y_label, y_pred):
     return -K.mean(y_label * y_pred)
 
+#############################
+# Build and train the model #
+#############################
 
 def build_and_train_models():
-    """Load the dataset, build WGAN discriminator,
-    generator, and adversarial models.
-    Call the WGAN train routine.
+    
+    """
+    Load the dataset, build WGAN discriminator, generator, 
+    and adversarial models. Call the WGAN train routine.
+    
     """
     # load MNIST dataset
     (x_train, _), (_, _) = mnist.load_data()
@@ -183,49 +228,56 @@ def build_and_train_models():
     # build discriminator model
     inputs = Input(shape=input_shape, name='discriminator_input')
     # WGAN uses linear activation in paper [2]
-    discriminator = gan.discriminator(inputs, activation='linear')
+    discriminator = ganBuilder.discriminator(inputs, activation='linear')
     optimizer = RMSprop(lr=lr)
     # WGAN discriminator uses wassertein loss
-    discriminator.compile(loss=wasserstein_loss,
-                          optimizer=optimizer,
-                          metrics=['accuracy'])
-    discriminator.summary()
+    discriminator.compile(
+        loss=wasserstein_loss,
+        optimizer=optimizer,
+        metrics=['accuracy']
+    )
 
     # build generator model
     input_shape = (latent_size, )
     inputs = Input(shape=input_shape, name='z_input')
-    generator = gan.generator(inputs, image_size)
-    generator.summary()
+    generator = ganBuilder.generator(inputs, image_size)
 
     # build adversarial model = generator + discriminator
     # freeze the weights of discriminator during adversarial training
     discriminator.trainable = False
-    adversarial = Model(inputs,
-                        discriminator(generator(inputs)),
-                        name=model_name)
-    adversarial.compile(loss=wasserstein_loss,
-                        optimizer=optimizer,
-                        metrics=['accuracy'])
-    adversarial.summary()
+    adversarial = Model(
+        inputs,
+        discriminator(generator(inputs)),
+        name=model_name
+    )
+    adversarial.compile(
+        loss=wasserstein_loss,
+        optimizer=optimizer,
+        metrics=['accuracy']
+    )
 
     # train discriminator and adversarial networks
     models = (generator, discriminator, adversarial)
-    params = (batch_size,
-              latent_size,
-              n_critic,
-              clip_value,
-              train_steps,
-              model_name)
+    params = (
+        batch_size,
+        latent_size,
+        n_critic,
+        clip_value,
+        train_steps,
+        model_name
+    )
     train(models, x_train, params)
 
-
+# main
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser()
     help_ = "Load generator h5 model with trained weights"
     parser.add_argument("-g", "--generator", help=help_)
     args = parser.parse_args()
+
     if args.generator:
         generator = load_model(args.generator)
-        gan.test_generator(generator)
+        ganBuilder.test_generator(generator)
     else:
         build_and_train_models()
