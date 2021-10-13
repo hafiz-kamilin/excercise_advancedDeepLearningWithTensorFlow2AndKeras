@@ -54,5 +54,5 @@ After I have completed this book, this repo will be changed to a public archive 
 
 ### [5 - Improved GAN](source/ch05)
 18. [WGAN on MNIST](source/ch05/18_MNISTwgan.py)
-19. 
+19. [LSGAN on MNIST](source/ch05/19_MNISTlsgan.py)
 20. 
