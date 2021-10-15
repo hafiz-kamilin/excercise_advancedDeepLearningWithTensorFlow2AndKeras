@@ -268,7 +268,10 @@ def build_and_train_models():
     )
     train(models, x_train, params)
 
-# main
+########
+# main #
+########
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
