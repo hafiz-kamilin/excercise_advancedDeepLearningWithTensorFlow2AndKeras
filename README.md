@@ -56,3 +56,7 @@ After I have completed this book, this repo will be changed to a public archive 
 18. [WGAN on MNIST](source/ch05/18_MNISTwgan.py)
 19. [LSGAN on MNIST](source/ch05/19_MNISTlsgan.py)
 20. [ACGAN on MNIST](source/ch05/20_MNISTacgan.py)
+
+### [6 - GAN with Disentangled Latent Representations](source/ch06)
+21. 
+22. 
