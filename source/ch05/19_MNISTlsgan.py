@@ -1,19 +1,33 @@
-'''Trains LSGAN on MNIST using Keras
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Trains LSGAN on MNIST using Keras
 
 LSGAN is similar to DCGAN except for the MSE loss used by the 
 Discriminator and Adversarial networks.
   
 [1] Radford, Alec, Luke Metz, and Soumith Chintala.
-"Unsupervised representation learning with deep convolutional
-generative adversarial networks." arXiv preprint arXiv:1511.06434 (2015).
+    "Unsupervised representation learning with deep convolutional generative adversarial networks."
+    arXiv preprint arXiv:1511.06434 (2015).
 
-[2] Mao, Xudong, et al. "Least squares generative adversarial networks." 
-2017 IEEE International Conference on Computer Vision (ICCV). IEEE, 2017.
-'''
+[2] Mao, Xudong, et al.
+    "Least squares generative adversarial networks." 
+    2017 IEEE International Conference on Computer Vision (ICCV). IEEE, 2017.
+
+"""
+
+######################
+# required libraries #
+######################
 
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
+# to supress tensorflow-gpu debug information
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 from tensorflow.keras.layers import Input
 from tensorflow.keras.optimizers import RMSprop
@@ -24,23 +38,31 @@ from tensorflow.keras.models import load_model
 import numpy as np
 import argparse
 
-import sys
-sys.path.append("..")
-from lib import gan
+# custom module to create the gan model component
+from utils import ganBuilder
 
+##############################
+# create and train the model #
+##############################
 
 def build_and_train_models():
-    """Load the dataset, build LSGAN discriminator,
-    generator, and adversarial models.
-    Call the LSGAN train routine.
+
     """
+    Load the dataset, build LSGAN discriminator, generator, 
+    and adversarial models. 
+    Call the LSGAN train routine.
+
+    """
+
     # load MNIST dataset
     (x_train, _), (_, _) = mnist.load_data()
 
     # reshape data for CNN as (28, 28, 1) and normalize
     image_size = x_train.shape[1]
-    x_train = np.reshape(x_train, 
-                         [-1, image_size, image_size, 1])
+    x_train = np.reshape(
+        x_train, 
+        [-1, image_size, image_size, 1]
+    )
     x_train = x_train.astype('float32') / 255
 
     model_name = "lsgan_mnist"
@@ -55,20 +77,22 @@ def build_and_train_models():
 
     # build discriminator model
     inputs = Input(shape=input_shape, name='discriminator_input')
-    discriminator = gan.discriminator(inputs, activation=None)
+    discriminator = ganBuilder.discriminator(inputs, activation=None)
     # [1] uses Adam, but discriminator easily 
     # converges with RMSprop
     optimizer = RMSprop(lr=lr, decay=decay)
     # LSGAN uses MSE loss [2]
-    discriminator.compile(loss='mse',
-                          optimizer=optimizer,
-                          metrics=['accuracy'])
+    discriminator.compile(
+        loss='mse',
+        optimizer=optimizer,
+        metrics=['accuracy']
+    )
     discriminator.summary()
 
     # build generator model
-    input_shape = (latent_size, )
+    input_shape = (latent_size,)
     inputs = Input(shape=input_shape, name='z_input')
-    generator = gan.generator(inputs, image_size)
+    generator = ganBuilder.generator(inputs, image_size)
     generator.summary()
 
     # build adversarial model = generator + discriminator
@@ -76,20 +100,27 @@ def build_and_train_models():
     # freeze the weights of discriminator 
     # during adversarial training
     discriminator.trainable = False
-    adversarial = Model(inputs,
-                        discriminator(generator(inputs)),
-                        name=model_name)
+    adversarial = Model(
+        inputs,
+        discriminator(generator(inputs)),
+        name=model_name
+    )
     # LSGAN uses MSE loss [2]
-    adversarial.compile(loss='mse',
-                        optimizer=optimizer,
-                        metrics=['accuracy'])
+    adversarial.compile(
+        loss='mse',
+        optimizer=optimizer,
+        metrics=['accuracy']
+    )
     adversarial.summary()
 
     # train discriminator and adversarial networks
     models = (generator, discriminator, adversarial)
     params = (batch_size, latent_size, train_steps, model_name)
-    gan.train(models, x_train, params)
+    ganBuilder.train(models, x_train, params)
 
+########
+# main #
+########
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -98,6 +129,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.generator:
         generator = load_model(args.generator)
-        gan.test_generator(generator)
+        ganBuilder.test_generator(generator)
     else:
         build_and_train_models()
