@@ -87,13 +87,11 @@ def build_and_train_models():
         optimizer=optimizer,
         metrics=['accuracy']
     )
-    discriminator.summary()
 
     # build generator model
     input_shape = (latent_size,)
     inputs = Input(shape=input_shape, name='z_input')
     generator = ganBuilder.generator(inputs, image_size)
-    generator.summary()
 
     # build adversarial model = generator + discriminator
     optimizer = RMSprop(lr=lr*0.5, decay=decay*0.5)
@@ -112,6 +110,7 @@ def build_and_train_models():
         metrics=['accuracy']
     )
     adversarial.summary()
+    print("\n")
 
     # train discriminator and adversarial networks
     models = (generator, discriminator, adversarial)
