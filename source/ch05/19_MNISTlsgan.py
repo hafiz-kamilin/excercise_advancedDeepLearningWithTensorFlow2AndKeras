@@ -123,12 +123,15 @@ def build_and_train_models():
 ########
 
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser()
     help_ = "Load generator h5 model with trained weights"
     parser.add_argument("-g", "--generator", help=help_)
     args = parser.parse_args()
+
     if args.generator:
         generator = load_model(args.generator)
         ganBuilder.test_generator(generator)
+    
     else:
         build_and_train_models()
