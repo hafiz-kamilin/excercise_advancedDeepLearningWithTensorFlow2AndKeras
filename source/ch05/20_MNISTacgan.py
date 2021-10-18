@@ -15,8 +15,8 @@ one-hot labels.
     arXiv preprint arXiv:1511.06434 (2015).
 
 [2] Odena, Augustus, Christopher Olah, and Jonathon Shlens. 
-"Conditional image synthesis with auxiliary classifier gans." 
-arXiv preprint arXiv:1610.09585 (2016).
+    "Conditional image synthesis with auxiliary classifier gans." 
+    arXiv preprint arXiv:1610.09585 (2016).
 
 """
 
