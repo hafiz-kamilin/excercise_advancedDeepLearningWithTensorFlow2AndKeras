@@ -10,7 +10,9 @@ Compiled source code from the second edition of [Advanced Deep Learning with Ten
 
 IMO, this is a really good introductory book that give simple and superficial explanation for a widely used machine learning models (feels kinda like [For Dummies series](https://www.dummies.com/) reference books, but skipping most of the steps). 
 
-You will need a supplementary free resources available on YouTube, Medium, or from the research paper itself to understand more on the content. Good for a programmer who major in machine learing, challenging for a newcomer.
+You will need a supplementary free resources available on YouTube, Medium, or from the research paper itself to understand more on the content.
+
+TLDR; a good book for a programmer majoring in machine learing, challenging book for a newcomer.
 
 ## Setup
 
