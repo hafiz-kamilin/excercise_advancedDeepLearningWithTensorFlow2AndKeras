@@ -303,7 +303,12 @@ def build_and_train_models(latent_size=100):
         name=model_name
     )
     # same loss as discriminator
-    adversarial.compile()
+    adversarial.compile(
+        loss=loss,
+        loss_weights=loss_weights,
+        optimizer=optimizer,
+        metrics=['accuracy']
+    )
     adversarial.summary()
 
     # train discriminator and adversarial networks
@@ -316,34 +321,50 @@ def build_and_train_models(latent_size=100):
               model_name)
     train(models, data, params)
 
+############################
+# Test the generated image #
+############################
 
 def test_generator(generator, params, latent_size=100):
+
     label, code1, code2, p1, p2 = params
     noise_input = np.random.uniform(-1.0, 1.0, size=[16, latent_size])
     step = 0
+
     if label is None:
+
         num_labels = 10
         noise_label = np.eye(num_labels)[np.random.choice(num_labels, 16)]
+
     else:
+
         noise_label = np.zeros((16, 10))
         noise_label[:,label] = 1
         step = label
 
     code_std = 2
+
     if code1 is None:
+
         noise_code1 = np.random.normal(scale=0.5, size=[16, 1])
+
     else:
+
         if p1:
             a = np.linspace(-code_std, code_std, 16)
             a = np.reshape(a, [16, 1])
             noise_code1 = np.ones((16, 1)) * a
         else:
             noise_code1 = np.ones((16, 1)) * code1
+
         print(noise_code1)
 
     if code2 is None:
+
         noise_code2 = np.random.normal(scale=0.5, size=[16, 1])
+
     else:
+
         if p2:
             a = np.linspace(-code_std, code_std, 16)
             a = np.reshape(a, [16, 1])
@@ -352,13 +373,15 @@ def test_generator(generator, params, latent_size=100):
             noise_code2 = np.ones((16, 1)) * code2
         print(noise_code2)
 
-    ganBuilder.plot_images(generator,
-                    noise_input=noise_input,
-                    noise_label=noise_label,
-                    noise_codes=[noise_code1, noise_code2],
-                    show=True,
-                    step=step,
-                    model_name="test_outputs")
+    ganBuilder.plot_images(
+        generator,
+        noise_input=noise_input,
+        noise_label=noise_label,
+        noise_codes=[noise_code1, noise_code2],
+        show=True,
+        step=step,
+        model_name="test_outputs"
+    )
 
 
 if __name__ == '__main__':
