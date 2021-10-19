@@ -47,7 +47,6 @@ import argparse
 # custom module to create the gan model component
 from utils import ganBuilder
 
-# from ..lib import gan
 
 def train(models, data, params):
     """Train the Discriminator and Adversarial networks
@@ -173,7 +172,7 @@ def train(models, data, params):
         print(log)
         if (i + 1) % save_interval == 0:
             # plot generator images on a periodic basis
-            gan.plot_images(generator,
+            ganBuilder.plot_images(generator,
                             noise_input=noise_input,
                             noise_label=noise_label,
                             noise_codes=[noise_code1, noise_code2],
@@ -228,7 +227,7 @@ def build_and_train_models(latent_size=100):
     inputs = Input(shape=input_shape, name='discriminator_input')
     # call discriminator builder with 4 outputs: 
     # source, label, and 2 codes
-    discriminator = gan.discriminator(inputs,
+    discriminator = ganBuilder.discriminator(inputs,
                                       num_labels=num_labels,
                                       num_codes=2)
     # [1] uses Adam, but discriminator converges easily with RMSprop
@@ -257,7 +256,7 @@ def build_and_train_models(latent_size=100):
     code2 = Input(shape=code_shape, name="code2")
     # call generator with inputs, 
     # labels and codes as total inputs to generator
-    generator = gan.generator(inputs,
+    generator = ganBuilder.generator(inputs,
                               image_size,
                               labels=labels,
                               codes=[code1, code2])
@@ -324,7 +323,7 @@ def test_generator(generator, params, latent_size=100):
             noise_code2 = np.ones((16, 1)) * code2
         print(noise_code2)
 
-    gan.plot_images(generator,
+    ganBuilder.plot_images(generator,
                     noise_input=noise_input,
                     noise_label=noise_label,
                     noise_codes=[noise_code1, noise_code2],
