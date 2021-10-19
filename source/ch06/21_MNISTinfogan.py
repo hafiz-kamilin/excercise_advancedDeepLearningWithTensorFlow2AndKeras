@@ -21,9 +21,17 @@ one-hot labels.
 
 """
 
+######################
+# required libraries #
+######################
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
+# to supress tensorflow-gpu debug information
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3
 
 from tensorflow.keras.layers import Input
 from tensorflow.keras.optimizers import RMSprop
@@ -36,9 +44,8 @@ from tensorflow.keras import backend as K
 import numpy as np
 import argparse
 
-import sys
-sys.path.append("..")
-from lib import gan
+# custom module to create the gan model component
+from utils import ganBuilder
 
 # from ..lib import gan
 
