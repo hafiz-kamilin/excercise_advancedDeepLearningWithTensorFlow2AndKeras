@@ -249,25 +249,31 @@ def build_and_train_models(latent_size=100):
     inputs = Input(shape=input_shape, name='discriminator_input')
     # call discriminator builder with 4 outputs: 
     # source, label, and 2 codes
-    discriminator = ganBuilder.discriminator(inputs,
-                                      num_labels=num_labels,
-                                      num_codes=2)
+    discriminator = ganBuilder.discriminator(
+        inputs,
+        num_labels=num_labels,
+        num_codes=2
+    )
     # [1] uses Adam, but discriminator converges easily with RMSprop
     optimizer = RMSprop(lr=lr, decay=decay)
     # loss functions: 1) probability image is real 
     # (binary crossentropy)
     # 2) categorical cross entropy image label,
     # 3) and 4) mutual information loss
-    loss = ['binary_crossentropy', 
-            'categorical_crossentropy', 
-            mi_loss, 
-            mi_loss]
+    loss = [
+        'binary_crossentropy', 
+        'categorical_crossentropy', 
+        mi_loss, 
+        mi_loss
+    ]
     # lamda or mi_loss weight is 0.5
     loss_weights = [1.0, 1.0, 0.5, 0.5]
-    discriminator.compile(loss=loss,
-                          loss_weights=loss_weights,
-                          optimizer=optimizer,
-                          metrics=['accuracy'])
+    discriminator.compile(
+        loss=loss,
+        loss_weights=loss_weights,
+        optimizer=optimizer,
+        metrics=['accuracy']
+    )
     discriminator.summary()
 
     # build generator model
@@ -278,10 +284,12 @@ def build_and_train_models(latent_size=100):
     code2 = Input(shape=code_shape, name="code2")
     # call generator with inputs, 
     # labels and codes as total inputs to generator
-    generator = ganBuilder.generator(inputs,
-                              image_size,
-                              labels=labels,
-                              codes=[code1, code2])
+    generator = ganBuilder.generator(
+        inputs,
+        image_size,
+        labels=labels,
+        codes=[code1, code2]
+    )
     generator.summary()
 
     # build adversarial model = generator + discriminator
@@ -289,14 +297,13 @@ def build_and_train_models(latent_size=100):
     discriminator.trainable = False
     # total inputs = noise code, labels, and codes
     inputs = [inputs, labels, code1, code2]
-    adversarial = Model(inputs,
-                        discriminator(generator(inputs)),
-                        name=model_name)
+    adversarial = Model(
+        inputs,
+        discriminator(generator(inputs)),
+        name=model_name
+    )
     # same loss as discriminator
-    adversarial.compile(loss=loss,
-                        loss_weights=loss_weights,
-                        optimizer=optimizer,
-                        metrics=['accuracy'])
+    adversarial.compile()
     adversarial.summary()
 
     # train discriminator and adversarial networks
