@@ -47,10 +47,13 @@ import argparse
 # custom module to create the gan model component
 from utils import ganBuilder
 
+####################################################
+# Train the discriminator and adversarial Networks #
+####################################################
 
 def train(models, data, params):
-    """Train the Discriminator and Adversarial networks
 
+    """
     Alternately train discriminator and adversarial networks by batch.
     Discriminator is trained first with real and fake images,
     corresponding one-hot labels and continuous codes.
@@ -62,57 +65,64 @@ def train(models, data, params):
         models (Models): Generator, Discriminator, Adversarial models
         data (tuple): x_train, y_train data
         params (tuple): Network parameters
+
     """
     # the GAN models
     generator, discriminator, adversarial = models
     # images and their one-hot labels
     x_train, y_train = data
     # network parameters
-    batch_size, latent_size, train_steps, num_labels, model_name = \
-            params
+    batch_size, latent_size, train_steps, num_labels, model_name = params
     # the generator image is saved every 500 steps
     save_interval = 500
     # code standard deviation
     code_std = 0.5
     # noise vector to see how the generator output 
     # evolves during training
-    noise_input = np.random.uniform(-1.0,
-                                    1.0,
-                                    size=[16, latent_size])
+    noise_input = np.random.uniform(
+        -1.0,
+        1.0,
+        size=[16, latent_size]
+    )
     # random class labels and codes
     noise_label = np.eye(num_labels)[np.arange(0, 16) % num_labels]
     noise_code1 = np.random.normal(scale=code_std, size=[16, 1])
     noise_code2 = np.random.normal(scale=code_std, size=[16, 1])
     # number of elements in train dataset
     train_size = x_train.shape[0]
-    print(model_name,
-          "Labels for generated images: ",
-          np.argmax(noise_label, axis=1))
+    print(model_name, "Labels for generated images: ", np.argmax(noise_label, axis=1))
+    
     for i in range(train_steps):
+
         # train the discriminator for 1 batch
         # 1 batch of real (label=1.0) and fake images (label=0.0)
         # randomly pick real images and 
         # corresponding labels from dataset 
-        rand_indexes = np.random.randint(0,
-                                         train_size,
-                                         size=batch_size)
+        rand_indexes = np.random.randint(
+            0,
+            train_size,
+            size=batch_size
+        )
         real_images = x_train[rand_indexes]
         real_labels = y_train[rand_indexes]
         # random codes for real images
-        real_code1 = np.random.normal(scale=code_std,
-                                      size=[batch_size, 1])
-        real_code2 = np.random.normal(scale=code_std, 
-                                      size=[batch_size, 1])
+        real_code1 = np.random.normal(
+            scale=code_std,
+            size=[batch_size, 1]
+        )
+        real_code2 = np.random.normal(
+            scale=code_std,
+            size=[batch_size, 1]
+        )
         # generate fake images, labels and codes
-        noise = np.random.uniform(-1.0,
-                                  1.0, 
-                                  size=[batch_size, latent_size])
-        fake_labels = np.eye(num_labels)[np.random.choice(num_labels,
-                                                          batch_size)]
-        fake_code1 = np.random.normal(scale=code_std,
-                                      size=[batch_size, 1])
-        fake_code2 = np.random.normal(scale=code_std, 
-                                      size=[batch_size, 1])
+        noise = np.random.uniform(
+            -1.0,
+            1.0, 
+            size=[batch_size, latent_size]
+        )
+        fake_labels = np.eye(num_labels)[np.random.choice(num_labels, batch_size)]
+        fake_code1 = np.random.normal(scale=code_std, size=[batch_size, 1])
+        fake_code2 = np.random.normal(scale=code_std, size=[batch_size, 1])
         inputs = [noise, fake_labels, fake_code1, fake_code2]
         fake_images = generator.predict(inputs)
 
@@ -145,15 +155,14 @@ def train(models, data, params):
         # since the discriminator weights are frozen 
         # in adversarial network only the generator is trained
         # generate fake images, labels and codes
-        noise = np.random.uniform(-1.0,
-                                  1.0,
-                                  size=[batch_size, latent_size])
-        fake_labels = np.eye(num_labels)[np.random.choice(num_labels,
-                                                          batch_size)]
-        fake_code1 = np.random.normal(scale=code_std,
-                                      size=[batch_size, 1])
-        fake_code2 = np.random.normal(scale=code_std, 
-                                      size=[batch_size, 1])
+        noise = np.random.uniform(
+            -1.0,
+            1.0,
+            size=[batch_size, latent_size]
+        )
+        fake_labels = np.eye(num_labels)[np.random.choice(num_labels, batch_size)]
+        fake_code1 = np.random.normal(scale=code_std, size=[batch_size, 1])
+        fake_code2 = np.random.normal(scale=code_std, size=[batch_size, 1])
         # label fake images as real
         y = np.ones([batch_size, 1])
 
@@ -171,35 +180,48 @@ def train(models, data, params):
 
         print(log)
         if (i + 1) % save_interval == 0:
+
             # plot generator images on a periodic basis
-            ganBuilder.plot_images(generator,
-                            noise_input=noise_input,
-                            noise_label=noise_label,
-                            noise_codes=[noise_code1, noise_code2],
-                            show=False,
-                            step=(i + 1),
-                            model_name=model_name)
+            ganBuilder.plot_images(
+                generator,
+                noise_input=noise_input,
+                noise_label=noise_label,
+                noise_codes=[noise_code1, noise_code2],
+                show=False,
+                step=(i + 1),
+                model_name=model_name
+            )
    
         # save the model after training the generator
         # the trained generator can be reloaded for
         # future MNIST digit generation
         if (i + 1) % (2 * save_interval) == 0:
+
             generator.save(model_name + ".h5")
 
+####################
+# loss calculation #
+####################
 
 def mi_loss(c, q_of_c_given_x):
-    """ Mutual information, Equation 5 in [2],
-        assuming H(c) is constant
+    
+    """
+    Mutual information, Equation 5 in [2], assuming H(c) is constant
+
     """
     # mi_loss = -c * log(Q(c|x))
-    return -K.mean(K.sum(c * K.log(q_of_c_given_x + K.epsilon()), 
-                                   axis=1))
+    return -K.mean(K.sum(c * K.log(q_of_c_given_x + K.epsilon()), axis=1))
 
+###################
+# build and train #
+###################
 
 def build_and_train_models(latent_size=100):
-    """Load the dataset, build InfoGAN discriminator,
-    generator, and adversarial models.
+    
+    """
+    Load the dataset, build InfoGAN discriminator, generator, and adversarial models.
     Call the InfoGAN train routine.
+
     """
     # load MNIST dataset
     (x_train, y_train), (_, _) = mnist.load_data()
