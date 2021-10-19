@@ -1,4 +1,8 @@
-'''Trains infoGAN on MNIST using Keras
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Trains infoGAN on MNIST using Keras
 
 This version of infoGAN is similar to DCGAN. The difference mainly
 is that the z-vector of geneerator is conditioned by a one-hot label
@@ -7,14 +11,15 @@ discriminate real from fake images and predict the corresponding
 one-hot labels.
 
 [1] Radford, Alec, Luke Metz, and Soumith Chintala.
-"Unsupervised representation learning with deep convolutional
-generative adversarial networks." arXiv preprint arXiv:1511.06434 (2015).
+    "Unsupervised representation learning with deep convolutional generative adversarial networks."
+    arXiv preprint arXiv:1511.06434 (2015).
 
 
-[2] Chen, Xi, et al. "Infogan: Interpretable representation learning by
-information maximizing generative adversarial nets." 
-Advances in Neural Information Processing Systems. 2016.
-'''
+[2] Chen, Xi, et al. 
+    "Infogan: Interpretable representation learning by information maximizing generative adversarial nets." 
+    Advances in Neural Information Processing Systems. 2016.
+
+"""
 
 from __future__ import absolute_import
 from __future__ import division
