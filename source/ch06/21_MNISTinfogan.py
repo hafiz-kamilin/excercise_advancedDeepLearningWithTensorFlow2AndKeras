@@ -31,7 +31,7 @@ from __future__ import print_function
 
 # to supress tensorflow-gpu debug information
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 from tensorflow.keras.layers import Input
 from tensorflow.keras.optimizers import RMSprop
