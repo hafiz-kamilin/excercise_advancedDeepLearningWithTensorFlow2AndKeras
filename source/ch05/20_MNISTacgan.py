@@ -340,6 +340,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.generator:
+
         generator = load_model(args.generator)
         class_label = None
         if args.digit is not None:
@@ -347,4 +348,5 @@ if __name__ == '__main__':
         test_generator(generator, class_label)
 
     else:
+        
         build_and_train_models()
