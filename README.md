@@ -18,8 +18,9 @@ TLDR; a good book for a programmer majoring in machine learing, challenging book
 
 1. Install Anaconda or Miniconda and create a new environment `conda create --name <your new environment name>`.
 2. Activate the new environment `conda activate <your new environment name>`.
-3. Install the required packages `conda install matplotlib tensorflow-gpu pydot graphviz`.
-4. cd to the [01_testTensorFlowInstallation.py](source/ch01/01_testTensorFlowInstallation.py) directory and run sanity program to test if the installation is properly configured or not.
+3. Install the required packages `conda install matplotlib pydot graphviz tensorflow-gpu`.
+4. Add conda's Graphviz to the system PATH.
+5. cd to the [01_testTensorFlowInstallation.py](source/ch01/01_testTensorFlowInstallation.py) directory and run sanity program to test if the installation is properly configured or not.
 
 ## Disclaimer
 
