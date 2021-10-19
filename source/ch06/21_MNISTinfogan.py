@@ -384,8 +384,14 @@ def test_generator(generator, params, latent_size=100):
     )
 
 
+########
+# main #
+########
+
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser()
+
     help_ = "Load generator h5 model with trained weights"
     parser.add_argument("-g", "--generator", help=help_)
     help_ = "Specify a specific digit to generate"
@@ -399,7 +405,9 @@ if __name__ == '__main__':
     help_ = "Plot digits with code2 ranging fr -n1 to +n2"
     parser.add_argument("--p2", action='store_true', help=help_)
     args = parser.parse_args()
+
     if args.generator:
+
         generator = load_model(args.generator)
         label = args.digit
         code1 = args.code1
@@ -408,5 +416,7 @@ if __name__ == '__main__':
         p2 = args.p2
         params = (label, code1, code2, p1, p2)
         test_generator(generator, params, latent_size=62)
+
     else:
+        
         build_and_train_models(latent_size=62)
