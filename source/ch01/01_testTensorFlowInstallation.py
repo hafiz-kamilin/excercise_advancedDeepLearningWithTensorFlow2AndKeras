@@ -24,6 +24,7 @@ def installAndSanityCheck():
             elif option == "No" or option == "no" or option == "n":
                 break
 
+        print("Loading TensorFlow library")
         # import the required libraries
         import tensorflow as tf
 
