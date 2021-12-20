@@ -7,6 +7,10 @@ on solving the MNIST dataset classification.
 
 """
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 # to supress tensorflow-gpu debug information
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
