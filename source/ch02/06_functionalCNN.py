@@ -17,7 +17,7 @@ from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten
 from tensorflow.keras.models import Model
 from tensorflow.keras.datasets import mnist
-from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical, plot_model
 
 # load MNIST dataset
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -76,6 +76,7 @@ model = Model(
 )
 # network model in text
 model.summary()
+plot_model(model, to_file='functional-cnn.png', show_shapes=True)
 
 # classifier loss, Adam optimizer, classifier accuracy
 model.compile(
