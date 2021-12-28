@@ -397,7 +397,7 @@ def resnet_v2(
 if __name__ == "__main__":
 
     # model name, depth and version
-    model_type = 'ResNet%dv%d' % (depth, version)
+    model_type = 'resnet-cifar-10-%dv%d' % (depth, version)
 
     # load the CIFAR10 data.
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
