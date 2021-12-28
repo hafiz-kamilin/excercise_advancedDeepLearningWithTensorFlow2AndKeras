@@ -93,14 +93,10 @@ model = Model(
     [left_inputs, right_inputs],
     outputs
 )
-# verify the model using graph
-plot_model(
-    model,
-    to_file='cnn-y-network.png',
-    show_shapes=True
-)
+
 # verify the model using layer text description
 model.summary()
+plot_model(model, to_file='y-network-cnn.png', show_shapes=True)
 
 # classifier loss, Adam optimizer, classifier accuracy
 model.compile(
